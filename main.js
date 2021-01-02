@@ -10,7 +10,7 @@ function createWindow() {
     center: true,
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
-    // icon: resolve(__dirname, 'assets/icons', 'icon@32x.png)
+    icon: resolve(__dirname, 'assets/icons', 'icon@32x.png'),
     webPreferences: {
       nodeIntegration: true
     }
