@@ -1,0 +1,29 @@
+{
+  "name": "calculator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/MattFerreira18/calculator.git",
+  "author": "<matheusferreira.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:all": "npm-run-all -p dist:*",
+    "dist:linux": "electron-builder --linux",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "electron": "^11.1.1",
+    "electron-builder": "^22.9.1"
+  },
+  "build": {
+    "linux": {
+      "category": "Utility",
+      "icon": "build/png/icon@16x.png",
+      "target": [
+        "deb"
+      ]
+    }
+  }
+}
