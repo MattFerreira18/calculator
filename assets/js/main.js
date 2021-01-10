@@ -1,86 +1,89 @@
-function createCalculator() {
-  return {
+function Calc() {
+  this.display = document.querySelector('.display');
 
-    display: document.querySelector('.display'),
-
-    start() {
-      this.mouseClick();
-      this.keyClick();
-    },
-
-    clearDisplay() { this.display.value = '' },
-
-    deleteOneNumber() { this.display.value = this.display.value.slice(0, -1) },
-
-    keyClick() {
-      document.addEventListener('keypress', (event) => {
-        const eventKeyTarget = event.code;
-
-        if (eventKeyTarget === 'Enter' || eventKeyTarget === 'NumpadEnter') this.realizeCalc();
-        if (eventKeyTarget === 'Delete') this.deleteOneNumber();
-        if (eventKeyTarget.includes('Digit')) {
-          const text = eventKeyTarget.replace('Digit', '');
-          this.numberToDisplay(text);
-        };
-        if (eventKeyTarget.includes('Numpad')) {
-
-          if (eventKeyTarget.includes('Add')) {
-            const text = '+';
-            this.numberToDisplay(text);
-          } else if (eventKeyTarget.includes('Subtract')) {
-            const text = '-';
-            this.numberToDisplay(text);
-          } else if (eventKeyTarget.includes('Multiply')) {
-            const text = '*';
-            this.numberToDisplay(text);
-          } else if (eventKeyTarget.includes('Divide')) {
-            const text = '/';
-            this.numberToDisplay(text);
-          } else if (eventKeyTarget.includes('Decimal')) {
-            const text = '.';
-            this.numberToDisplay(text);
-          } else if (eventKeyTarget.includes('Enter')) {
-            this.realizeCalc();
-          } else {
-            const text = eventKeyTarget.replace('Numpad', '');
-            this.numberToDisplay(text);
-          };
-
-
-        };
-      });
-    },
-
-    mouseClick() {
-      document.addEventListener('mousedown', (event) => {
-        const eventTarget = event.target;
-        const eventTargetWithClass = eventTarget.classList;
-        if (eventTargetWithClass.contains('btn-number')) this.numberToDisplay(eventTarget.innerText);
-        if (eventTargetWithClass.contains('btn-clear')) this.clearDisplay();
-        if (eventTargetWithClass.contains('btn-delete')) this.deleteOneNumber();
-        if (eventTargetWithClass.contains('btn-equal')) this.realizeCalc();
-
-        //arrow function do not change this
-        //in anonimous function, colocate function(){}.bind to alterate this, this => calculator and not #document
-      });
-    },
-
-    numberToDisplay(text) { this.display.value += text },
-
-    realizeCalc() {
-      let displayValue = this.display.value;
-      try {
-        displayValue = eval(displayValue);
-        if (!displayValue) return alert('this not a valid calc');
-
-        return this.display.value = String(displayValue);
-
-      } catch (err) { return alert('this not a valid calc') }
-
-    },
-
+  this.characterToDisplay = (character) => {
+    this.display.value += character;
   };
-};
 
-const calculator = createCalculator();
-calculator.start();
+  this.clearDisplay = () => {
+    this.display.value = '';
+  };
+
+  this.deleteOneCharacter = () => {
+    this.display.value = this.display.value.slice(0, -1);
+  };
+
+  this.realizeCalc = () => {
+    let displayValue = this.display.value;
+    try {
+      displayValue = window.eval(displayValue);
+      if (!displayValue) {
+        return alert('this is not a valid calc');
+      }
+      return (this.display.value = String(displayValue));
+    } catch (err) {
+      return alert('this is not a valid calc');
+    }
+  };
+  this.resolveNumpadTarget = (keytarget) => {
+    if (keytarget.includes('Add')) {
+      const simbol = '+';
+      this.characterToDisplay(simbol);
+    } else if (keytarget.includes('Subtract')) {
+      const simbol = '-';
+      this.characterToDisplay(simbol);
+    } else if (keytarget.includes('Multiply')) {
+      const simbol = '*';
+      this.characterToDisplay(simbol);
+    } else if (keytarget.includes('Divide')) {
+      const simbol = '/';
+      this.characterToDisplay(simbol);
+    } else if (keytarget.includes('Decimal')) {
+      const simbol = '.';
+      this.characterToDisplay(simbol);
+    } else if (keytarget.includes('Enter')) {
+      this.realizeCalc();
+    } else {
+      const character = keytarget.replace('Numpad', '');
+      this.characterToDisplay(character);
+    }
+  };
+
+  this.keyClicked = (event) => {
+    const eventKeyTarget = event.code;
+    if (eventKeyTarget === 'Enter' || eventKeyTarget === 'NumpadEnter') {
+      this.realizeCalc();
+    }
+    if (eventKeyTarget === 'Delete') this.deleteOneCharacter();
+    if (eventKeyTarget.includes('Digit')) {
+      const text = eventKeyTarget.replace('Digit', '');
+      this.characterToDisplay(text);
+    }
+    if (eventKeyTarget.includes('Numpad')) {
+      this.resolveNumpadTarget(eventKeyTarget);
+    }
+  };
+
+  this.mouseClicked = (event) => {
+    const targetClass = event.target.classList;
+
+    if (targetClass.contains('btn-number')) {
+      this.characterToDisplay(event.target.innerText);
+    }
+    if (targetClass.contains('btn-clear')) this.clearDisplay();
+    if (targetClass.contains('btn-delete')) this.deleteOneCharacter();
+    if (targetClass.contains('btn-equal')) this.realizeCalc();
+  };
+
+  this.start = () => {
+    document.addEventListener('keypress', (event) => {
+      this.keyClicked(event);
+    });
+    document.addEventListener('mousedown', (event) => {
+      this.mouseClicked(event);
+    });
+  };
+}
+
+const calc = new Calc();
+calc.start();
